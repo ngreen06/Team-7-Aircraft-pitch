@@ -1,0 +1,45 @@
+s = tf('s');
+
+P_pitch = (1.15*s^2+0.51*s+0.057)/(s^4+1.046*s^3+1.154*s^2+0.287*s);
+
+t = 0:0.01:10;
+
+step(0.2*P_pitch,t);
+
+axis([0 10 0 0.8]);
+
+ylabel('pitch angle (rad)');
+
+title('Open-loop Step Response');
+
+sys_cl = feedback(P_pitch,1);
+
+step(0.2*sys_cl);
+
+ylabel('pitch angle (rad)');
+
+title('Closed-loop Step Response');
+
+poles = pole(sys_cl);
+
+zeroes = zero(sys_cl);
+
+poles
+zeroes
+
+R = 0.2/s;
+Y = zpk(sys_cl*R);
+
+Y
+
+[r,p,k] = residue(0.2*[1.15 0.51 0.057],[1 1.046 1.154 0.287 1 0])
+
+[num,den] = residue(r(1:2),p(1:2),k);
+tf(num,den)
+
+t = [0:0.1:70];
+y = 1.0 * ((-0.0315724051129247 * exp(0.38506.*t) .* sin(1.38267957152046.*t)) - (0.111648909326384 * exp(0.38506.*t) .* cos(1.38267957152046.*t)) + ((0.0102728986505248 + 1.91336198924721*10^(-19)*1i) * exp(0.42881.*t)) - 0.0986719960310251 * exp(0.61715.*t) + 0.600144020120652 * exp(0.71551.*t)) .* exp(-0.71551.*t) .* theta(t);
+plot(t,y);
+xlabel('time (sec)');
+ylabel('pitch angle (rad)');
+title('Closed-loop Step Response');
